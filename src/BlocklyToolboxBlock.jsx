@@ -1,41 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutableRenderMixin from 'react-immutable-render-mixin';
 
-var BlocklyToolboxBlock = React.createClass({
-  mixins: [ImmutableRenderMixin],
+class BlocklyToolboxBlock extends Component {
 
-  propTypes: {
-    type: React.PropTypes.string.isRequired,
-    shadow: React.PropTypes.bool,
-    fields: ImmutablePropTypes.map,
-    values: ImmutablePropTypes.map,
-    statements: ImmutablePropTypes.map,
-    next: ImmutablePropTypes.map,
-    mutation: ImmutablePropTypes.mapContains({
-      attributes: ImmutablePropTypes.map,
-      innerContent: React.PropTypes.string
-    })
-  },
-
-  statics: {
-    renderBlock: function(block, key) {
-      return (
-        <BlocklyToolboxBlock
-          type={block.get('type')}
-          key={key}
-          fields={block.get('fields')}
-          values={block.get('values')}
-          statements={block.get('statements')}
-          mutation={block.get('mutation')}
-          shadow={block.get('shadow')}
-          next={block.get('next')} />
-      );
-    }
-  },
-
-  componentDidMount: function() {
+  componentDidMount() {
     if (this.props.mutation) {
       var mutation = ReactDOM.findDOMNode(this.refs.mutation);
 
@@ -44,9 +15,9 @@ var BlocklyToolboxBlock = React.createClass({
         return true;
       });
     }
-  },
+  };
 
-  render: function() {
+  render() {
     var fields = [];
     var values = [];
     var statements = [];
@@ -60,7 +31,7 @@ var BlocklyToolboxBlock = React.createClass({
             {fieldValue}
           </field>
         );
-      }.bind(this)).valueSeq();
+      }).valueSeq();
     }
 
     if (this.props.values) {
@@ -70,7 +41,7 @@ var BlocklyToolboxBlock = React.createClass({
             {BlocklyToolboxBlock.renderBlock(valueBlock)}
           </value>
         );
-      }.bind(this)).valueSeq();
+      }).valueSeq();
 
     }
 
@@ -81,7 +52,7 @@ var BlocklyToolboxBlock = React.createClass({
             {BlocklyToolboxBlock.renderBlock(statementBlock)}
           </statement>
         );
-      }.bind(this)).valueSeq();
+      }).valueSeq();
     }
 
     if (this.props.mutation) {
@@ -116,6 +87,37 @@ var BlocklyToolboxBlock = React.createClass({
       );
     }
   }
-});
+};
+
+BlocklyToolboxBlock.mixins = [ImmutableRenderMixin];
+
+BlocklyToolboxBlock.propTypes = {
+  type: PropTypes.string.isRequired,
+  shadow: PropTypes.bool,
+  fields: ImmutablePropTypes.map,
+  values: ImmutablePropTypes.map,
+  statements: ImmutablePropTypes.map,
+  next: ImmutablePropTypes.map,
+  mutation: ImmutablePropTypes.mapContains({
+    attributes: ImmutablePropTypes.map,
+    innerContent: PropTypes.string
+  })
+};
+
+BlocklyToolboxBlock.statics = {
+  renderBlock(block, key) {
+    return (
+      <BlocklyToolboxBlock
+        type={block.get('type')}
+        key={key}
+        fields={block.get('fields')}
+        values={block.get('values')}
+        statements={block.get('statements')}
+        mutation={block.get('mutation')}
+        shadow={block.get('shadow')}
+        next={block.get('next')} />
+    );
+  }
+};
 
 export default BlocklyToolboxBlock;

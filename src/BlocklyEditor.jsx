@@ -1,48 +1,38 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Immutable from 'immutable';
+import PropTypes from 'prop-types';
 
 import BlocklyToolbox from './BlocklyToolbox';
 import BlocklyWorkspace from './BlocklyWorkspace';
 
-var BlocklyEditor = React.createClass({
-  propTypes: {
-    initialXml: React.PropTypes.string,
-    workspaceConfiguration: React.PropTypes.object,
-    wrapperDivClassName: React.PropTypes.string,
-    toolboxCategories: React.PropTypes.array,
-    toolboxBlocks: React.PropTypes.array,
-    xmlDidChange: React.PropTypes.func,
-    onImportXmlError: React.PropTypes.func,
-    processToolboxCategory: React.PropTypes.func
-  },
-
-  toolboxDidUpdate: function() {
+class BlocklyEditor extends Component {
+  toolboxDidUpdate() {
     var workspaceConfiguration = this.props.workspaceConfiguration || {};
     if (this.refs.workspace && !workspaceConfiguration.readOnly) {
       this.refs.workspace.toolboxDidUpdate(ReactDOM.findDOMNode(this.refs.toolbox));
     }
-  },
+  };
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.toolboxDidUpdate();
-  },
+  };
 
-  xmlDidChange: function(newXml) {
+  xmlDidChange(newXml) {
     if (this.props.xmlDidChange) {
       this.props.xmlDidChange(newXml);
     }
-  },
+  };
 
-  importFromXml: function(xml) {
+  importFromXml(xml) {
     return this.refs.workspace.importFromXml(xml);
-  },
+  };
 
-  resize: function() {
+  resize() {
     this.refs.workspace.resize();
-  },
+  };
 
-  render: function() {
+  render() {
     var toolboxMode;
     if (this.props.toolboxCategories) {
       toolboxMode = "CATEGORIES";
@@ -68,6 +58,16 @@ var BlocklyEditor = React.createClass({
       </div>
     );
   }
-});
+};
 
+BlocklyEditor.propTypes = {
+  initialXml: PropTypes.string,
+  workspaceConfiguration: PropTypes.object,
+  wrapperDivClassName: PropTypes.string,
+  toolboxCategories: PropTypes.array,
+  toolboxBlocks: PropTypes.array,
+  xmlDidChange: PropTypes.func,
+  onImportXmlError: PropTypes.func,
+  processToolboxCategory: PropTypes.func
+};
 export default BlocklyEditor;
